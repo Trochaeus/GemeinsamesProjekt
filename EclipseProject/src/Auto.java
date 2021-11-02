@@ -1,56 +1,33 @@
 
-public class Auto {
+public class Auto extends Fahrzeug {
 
-	private String hersteller;
-	private String typ;
-	private int hoechstgeschwindigkeit;
+	private boolean hatDachgepaecktraeger;
 
-	// Default-Konstruktor: Erzeugt nur das Objekt und macht sonst nichts.
 	public Auto() {
-
 	}
 
-	// Konstruktor mit Parametern: Greift einem Aufruf der Setter vorweg und
-	// initialisiert alle Instanzvariablen mit den übergebenen Werten
-	public Auto(String hersteller, String typ, int hoechstgeschwindigkeit) {
-		this.hersteller = hersteller;
-		this.typ = typ;
-		this.hoechstgeschwindigkeit = hoechstgeschwindigkeit;
+	public Auto(boolean hatDachgepaecktraeger) {
+		this.hatDachgepaecktraeger = hatDachgepaecktraeger;
 	}
 
-	public String fahreSchnell(int minuten) {
-		double streckeInKmh = hoechstgeschwindigkeit * 0.5 * minuten / 60;
-		return String.valueOf(streckeInKmh) + " km gefahren.";
+	public Auto(String hersteller, String typ, int hoechstgeschwindigkeit, boolean hatDachgepaecktraeger) {
+		super(hersteller, typ, hoechstgeschwindigkeit);
+
+		this.hatDachgepaecktraeger = hatDachgepaecktraeger;
 	}
 
-	public String getHersteller() {
-		return hersteller;
+	public boolean isHatDachgepaecktraeger() {
+		return hatDachgepaecktraeger;
 	}
 
-	public void setHersteller(String hersteller) {
-		this.hersteller = hersteller;
-	}
-
-	public String getTyp() {
-		return typ;
-	}
-
-	public void setTyp(String typ) {
-		this.typ = typ;
-	}
-
-	public int getHoechstgeschwindigkeit() {
-		return hoechstgeschwindigkeit;
-	}
-
-	public void setHoechstgeschwindigkeit(int hoechstgeschwindigkeit) {
-		this.hoechstgeschwindigkeit = hoechstgeschwindigkeit;
+	public void setHatDachgepaecktraeger(boolean hatDachgepaecktraeger) {
+		this.hatDachgepaecktraeger = hatDachgepaecktraeger;
 	}
 
 	@Override
 	public String toString() {
-		return "Auto [hersteller=" + hersteller + ", typ=" + typ + ", hoechstgeschwindigkeit=" + hoechstgeschwindigkeit
-				+ "]";
+		return "Auto [hatDachgepaecktraeger=" + hatDachgepaecktraeger + ", getHersteller()=" + getHersteller()
+				+ ", getTyp()=" + getTyp() + ", getHoechstgeschwindigkeit()=" + getHoechstgeschwindigkeit() + "]";
 	}
 
 }
