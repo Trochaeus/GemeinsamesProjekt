@@ -1,4 +1,4 @@
-class Doppeldecker extends Flugzeug{ //Man kann Vererbung von der Klasse Doppeldecker verhindern, wenn man die Klasse/den Konstruktor auf private setzt. Keine Klasse kann dann von Doppeldecker erben
+final class Doppeldecker extends Flugzeug{ //Du kannst deine Klasse mit dem Modifikator final ausstatten. Bedeutet wie bei den Variablen, dass die Klasse dann zu einer Konstanten wird mit dem Unterschied das du in der Klasse selbst Daten ändern kannst. Es ist aber nicht mehr möglich das andere Klasse von dieser Klasse erben und diese erweitern bzw. Methoden aufrufen und überschreiben.
     //Attribute
     private int anzahlFluegel = 2;
     private final int LOOPINGSPEED = 320;
