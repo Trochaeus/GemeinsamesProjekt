@@ -10,9 +10,9 @@ public class Rechteck {
         this.laenge = laenge;
         this.breite = breite;
     }
-    public Rechteck(double Seite) {
-        this.laenge = Seite;
-        this.breite = Seite;
+    public Rechteck(double Seiten) {
+        this.laenge = Seiten;
+        this.breite = Seiten;
     }
 
     //Getter und Setter

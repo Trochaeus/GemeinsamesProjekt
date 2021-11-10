@@ -35,5 +35,9 @@ public class Main {
             kreis.setRadius((5+5*i));
             System.out.println(kreis.getRadius() + "    " + kreis.getUmfang() + "    " + kreis.getFlaecheninhalt());
         }
+        System.out.println(" ");
+
+        Flaechengleichheit flaechengleichheit = new Flaechengleichheit();
+        flaechengleichheit.Aufrufen(10,12);
     }
 }
