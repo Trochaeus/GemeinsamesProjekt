@@ -12,10 +12,11 @@ public class Flaechengleichheit {
         Kreis kreisFlaecheGleich = new Kreis(0);
         kreisFlaecheGleich.setFlaeche(rechteckFlaecheGleich.getFlaecheninhalt());
         System.out.println("Flächengleichheit (Kreis und Rechteck)");
-        System.out.println("- Kreisradius Flächengleichheit: " + kreisFlaecheGleich.getRadius());
-        System.out.println("   - Flächeninhalt: " + kreisFlaecheGleich.getFlaecheninhalt());
         System.out.println("- Breite: " + rechteckFlaecheGleich.getBreite() + " und Länge: " + rechteckFlaecheGleich.getLaenge());
         System.out.println("   - Flächeninhalt: " + rechteckFlaecheGleich.getFlaecheninhalt());
+        System.out.println("- Kreisradius Flächengleichheit: " + kreisFlaecheGleich.getRadius());
+        System.out.println("   - Flächeninhalt: " + kreisFlaecheGleich.getFlaecheninhalt());
+
     }
     public void Aufrufen(double Seiten) {
         this.breite = Seiten;
@@ -25,9 +26,9 @@ public class Flaechengleichheit {
         Kreis kreisFlaecheGleich = new Kreis(0);
         kreisFlaecheGleich.setFlaeche(rechteckFlaecheGleich.getFlaecheninhalt());
         System.out.println("Flächengleichheit (Kreis und Rechteck)");
-        System.out.println("- Kreisradius Flächengleichheit: " + kreisFlaecheGleich.getRadius());
-        System.out.println("   - Flächeninhalt: " + kreisFlaecheGleich.getFlaecheninhalt());
         System.out.println("- Breite: " + rechteckFlaecheGleich.getBreite() + " und Länge: " + rechteckFlaecheGleich.getLaenge());
         System.out.println("   - Flächeninhalt: " + rechteckFlaecheGleich.getFlaecheninhalt());
+        System.out.println("- Kreisradius Flächengleichheit: " + kreisFlaecheGleich.getRadius());
+        System.out.println("   - Flächeninhalt: " + kreisFlaecheGleich.getFlaecheninhalt());
     }
 }

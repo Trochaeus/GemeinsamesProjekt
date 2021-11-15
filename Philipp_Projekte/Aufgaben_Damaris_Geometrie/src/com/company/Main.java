@@ -30,8 +30,8 @@ public class Main {
 
         // KREISTABELLE KREISTABELLE KREISTABELLE KREISTABELLE KREISTABELLE KREISTABELLE KREISTABELLE
         kreis.setRadius(5);
+        System.out.println("Radius   Umfang    Fläche");
         for(int i = 0; i < 31; i++) {
-            System.out.println("Radius   Umfang    Fläche");
             kreis.setRadius((5+5*i));
             System.out.println(kreis.getRadius() + "    " + kreis.getUmfang() + "    " + kreis.getFlaecheninhalt());
         }
