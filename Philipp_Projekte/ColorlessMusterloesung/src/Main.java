@@ -17,6 +17,7 @@ public class Main {
         System.out.println("- Simplifizierte Farben(4)");
         System.out.println("- Zufällige Farbvertauschung pro Pixel (5)");
         System.out.println("- Zufällige Farbvertauschung pro Bild (6)");
+        System.out.println("- Rote Pflanzen [Grün->Rot] (7)");
 
         System.out.println(" ");
         System.out.println("Gebe die jeweilige Zahl ein: ");
@@ -30,7 +31,7 @@ public class Main {
 
         BufferedImage image;
         try {
-            File input = new File("C:\\Users\\NAME\\GIT\\GemeinsamesProjekt\\Philipp_Projekte\\SchwarzWeissFilter\\color.jpg");
+            File input = new File("C:\\Users\\pgerhardy\\GIT\\GemeinsamesProjekt\\Philipp_Projekte\\SchwarzWeissFilter\\color.jpg");
             image = ImageIO.read(input);
             int width = image.getWidth();
             int height = image.getHeight();
@@ -43,7 +44,7 @@ public class Main {
                     int blue = (color.getBlue());
                     //Hier Methoden
                     int[] ausgabe = {color.getRed(), color.getGreen(), color.getBlue()};
-                    if(auswahl.matches("^[1,2,3,4,5,6]$")){
+                    if(auswahl.matches("^[1,2,3,4,5,6,7]$")){
                         switch (auswahl) {
                             case "1" -> ausgabe = farbMixGenerator.KorrekterGraufilter(red,green,blue); //fehler
                             case "2" -> ausgabe = farbMixGenerator.gleichartigerGraufilter(red,green,blue);
@@ -51,6 +52,7 @@ public class Main {
                             case "4" -> ausgabe = farbMixGenerator.SimplifizierteFarben(red,green,blue);
                             case "5" -> ausgabe = farbMixGenerator.ZufaelligeVertauschung(red,green,blue);
                             case "6" -> ausgabe = farbMixGenerator.ZufaelligeVertauschung2(red,green,blue,zufallszahl1,zufallszahl2,zufallszahl3);
+                            case "7" -> ausgabe = farbMixGenerator.RotePflanzen(red,green,blue);
                             default -> System.out.println("Die Eingabe ist nicht gültig");
                         }
                     }
@@ -62,7 +64,7 @@ public class Main {
                     image.setRGB(j,i,newColor.getRGB());
                 }
             }
-            File ouptut = new File("C:\\Users\\NAME\\GIT\\GemeinsamesProjekt\\Philipp_Projekte\\SchwarzWeissFilter\\GetauschteFarben.jpg");
+            File ouptut = new File("C:\\Users\\pgerhardy\\GIT\\GemeinsamesProjekt\\Philipp_Projekte\\SchwarzWeissFilter\\GetauschteFarben.jpg");
             System.out.println("Done");
             ImageIO.write(image, "jpg", ouptut);
         }

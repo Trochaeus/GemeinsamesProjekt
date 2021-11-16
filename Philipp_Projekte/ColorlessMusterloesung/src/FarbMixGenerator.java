@@ -100,4 +100,13 @@ public class FarbMixGenerator {
 
         return ausgabe;
     }
+    public int[] RotePflanzen(int red,int green,int blue) {
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+
+        int[] ausgabe = {green,red,green};
+
+        return ausgabe;
+    }
 }
