@@ -58,11 +58,11 @@ public class Game {
         for(int yAxis = 0; yAxis < spielfeld.length; yAxis++) {
             for (int xAxis = 0; xAxis < spielfeld[0].length; xAxis++) {
                 switch (spielfeld[yAxis][xAxis]) {
-                    case "." -> System.out.print(ANSI_CYAN + spielfeld[yAxis][xAxis] + ANSI_RESET);
-                    case "#", "|" -> System.out.print(ANSI_GREEN + spielfeld[yAxis][xAxis] + ANSI_RESET);
-                    case "*", "/" -> System.out.print(ANSI_YELLOW + spielfeld[yAxis][xAxis] + ANSI_RESET);
-                    case "~" -> System.out.print(spielfeld[yAxis][xAxis]);
-                    default -> System.out.print(ANSI_PURPLE + spielfeld[yAxis][xAxis] + ANSI_RESET);
+                    case "." -> System.out.print(ANSI_CYAN + spielfeld[yAxis][xAxis] + ANSI_RESET); //Hintergrund
+                    case "#", "|" -> System.out.print(ANSI_GREEN + spielfeld[yAxis][xAxis] + ANSI_RESET); //Türme
+                    case "*", "/" -> System.out.print(ANSI_YELLOW + spielfeld[yAxis][xAxis] + ANSI_RESET); //Spieler
+                    case "~" -> System.out.print(spielfeld[yAxis][xAxis]); //Wolken/Hintergrund
+                    default -> System.out.print(ANSI_PURPLE + spielfeld[yAxis][xAxis] + ANSI_RESET); //Sollte eigentlich nicht vorkommen
                 }
             }
             if(yAxis == spielfeld.length-1){
@@ -79,7 +79,8 @@ public class Game {
         this.spielfeld = spielfeld;
 
         int TurmOben = random.nextInt(5);
-        int TurmUnten = TurmOben+5;
+        int zufallszahl = random.nextInt(3);
+        int TurmUnten = TurmOben+4;
 
         spielfeld[TurmOben][spielfeld[0].length-1] = "#";
         while(TurmOben > 0) {
@@ -102,13 +103,24 @@ public class Game {
         this.spielfeld = spielfeld;
         for (int yAxis = 0; yAxis < spielfeld.length; yAxis++) {
             for (int xAxis = 0; xAxis < spielfeld[0].length; xAxis++) {
-                //Testen auf Spieler
+
+                //Testen auf Spieler - Kollision mit Turm
                 if ((xAxis + 1) < spielfeld[0].length && spielfeld[yAxis][xAxis].equals("*") || spielfeld[yAxis][xAxis].equals("/")) {
                     //Testen auf Turm
                     if(spielfeld[yAxis][xAxis + 1].equals("|") || spielfeld[yAxis][xAxis + 1].equals("#")) {
                         this.Death();
                     }
                 }
+                //Wolken verschieben (Hinter den Spieler)
+                if ((xAxis + 1) < spielfeld[0].length && (xAxis-1) > 0
+                        && spielfeld[yAxis][xAxis + 1].equals("~")) {
+                    if(spielfeld[yAxis][xAxis].equals("*") || spielfeld[yAxis][xAxis].equals("/")) {
+                        if(spielfeld[yAxis][xAxis-1].equals("|") && spielfeld[yAxis][xAxis-1].equals("#"))
+                        spielfeld[yAxis][xAxis - 1] = "~"; //Wolke eins hinter den Spieler verschieben
+                    }
+                }
+
+                //Feld verschieben
                 if ((xAxis + 1) < spielfeld[0].length
                         && !spielfeld[yAxis][xAxis + 1].equals("*")
                         && !spielfeld[yAxis][xAxis + 1].equals("/")
@@ -116,8 +128,19 @@ public class Game {
                         && !spielfeld[yAxis][xAxis].equals("/")) {
                     spielfeld[yAxis][xAxis] = spielfeld[yAxis][xAxis + 1]; //Icons eins nach links verschieben
                 }
-                if(spielfeld[yAxis][spielfeld[0].length-2].equals("#") || spielfeld[yAxis][spielfeld[0].length - 2].equals("|")) {
-                    spielfeld[yAxis][spielfeld[0].length-1] = ".";         //"." in letzter Spalte - entfernt die Türme
+
+
+                //In letzter Spalte neue Punkte bilden
+                if(spielfeld[yAxis][spielfeld[0].length-2].equals("#") || spielfeld[yAxis][spielfeld[0].length - 2].equals("|") || spielfeld[yAxis][spielfeld[0].length - 2].equals("~")) {
+                    spielfeld[yAxis][spielfeld[0].length-1] = ".";         //"." in letzter Spalte - entfernt die Türme und die Wolken, die sich unendlich bilden
+                }
+                //Bilden neuer Wolken
+                if(!spielfeld[yAxis][spielfeld[0].length-2].equals("#") && !spielfeld[yAxis][spielfeld[0].length - 2].equals("|") && !spielfeld[yAxis][spielfeld[0].length - 2].equals("~") && !spielfeld[yAxis][spielfeld[0].length-3].equals("#") && !spielfeld[yAxis][spielfeld[0].length - 3].equals("|") && !spielfeld[yAxis][spielfeld[0].length - 3].equals("~")) {
+                    int zufallszahl = random.nextInt(300);
+                    if(zufallszahl == 0 && yAxis < spielfeld.length/2) {
+                        spielfeld[yAxis][spielfeld[0].length - 2] = "~";
+                        spielfeld[yAxis][spielfeld[0].length - 3] = "~";
+                    }
                 }
             }
         }
@@ -141,7 +164,6 @@ public class Game {
                 SpaceIsPressed = false; //Zurücksetzen
             }
             else {
-                System.out.println("TEST1");
                 this.Death();
             }
         }
@@ -150,7 +172,6 @@ public class Game {
                 spielerYAxis++; //Die spielerYAxis ist von oben nach unten; ++ bedeutet, um eins nach unten
             }
             else {
-                System.out.println("TEST2");
                 this.Death();
             }
         }

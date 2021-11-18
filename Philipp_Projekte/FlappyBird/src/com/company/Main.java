@@ -30,8 +30,8 @@ public class Main {
                 }
             }
         }
+        System.out.println("Du spielst zu viel. Du hast gewonnen. Aber war es das wirklich wert?");
     }
-
 }
         /*
         spielfeld[0].length 50 x
