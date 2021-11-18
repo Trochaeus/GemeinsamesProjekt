@@ -55,10 +55,13 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
 
     @Override
     public void keyPressed(KeyEvent e) {
-        typingArea.setText("");
         if(e.getKeyChar() == ' ') {
             Game.setSpaceIsPressed();
         }
+        else if(e.getKeyChar() == 's') {
+            Game.StartGame = true;
+        }
+        typingArea.setText("");
     }
 
 

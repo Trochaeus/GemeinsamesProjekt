@@ -1,12 +1,14 @@
 package com.company;
+import java.io.*;
 import java.util.Random;
 
 public class Game {
     //Attribute
     private String[][] spielfeld;
     Random random = new Random();
-    private int spieleryAxis = 5;
+    private int spielerYAxis = 5;
     private static boolean SpaceIsPressed;
+    public static boolean StartGame;
     private int Score = 0;
 
 
@@ -16,10 +18,10 @@ public class Game {
     public final String ANSI_RED = "\u001B[31m";
     public final String ANSI_GREEN = "\u001B[32m";
     public final String ANSI_YELLOW = "\u001B[33m";
-    //public final String ANSI_BLUE = "\u001B[34m";
+    public final String ANSI_BLUE = "\u001B[34m";
     public final String ANSI_PURPLE = "\u001B[35m";
     public final String ANSI_CYAN = "\u001B[36m";
-    //public final String ANSI_WHITE = "\u001B[37m";
+    public final String ANSI_WHITE = "\u001B[37m";
 
 
     // Spielfeld erstellen
@@ -28,8 +30,8 @@ public class Game {
         spielfeld = new String[10][50];
         for(int yAxis = 0; yAxis < spielfeld.length; yAxis++) {
             for (int xAxis = 0; xAxis < spielfeld[0].length; xAxis++) {
-                int WkeitWolke = random.nextInt(15);
-                if(WkeitWolke == 0 && spielfeld[yAxis][xAxis] == null && yAxis < spielfeld.length/2) {
+                int wahrscheinlichkeitWolke = random.nextInt(15);
+                if(wahrscheinlichkeitWolke == 0 && spielfeld[yAxis][xAxis] == null && yAxis < spielfeld.length/2) {
                     spielfeld[yAxis][xAxis] = "~";
                     if((xAxis+1) < spielfeld[0].length-1){
                         spielfeld[yAxis][xAxis + 1] = "~";
@@ -132,54 +134,63 @@ public class Game {
     public String[][] Player(String[][] spielfeld) {
         this.spielfeld = spielfeld;
 
-        if(SpaceIsPressed && spieleryAxis > 0){
-            if(!spielfeld[spieleryAxis-1][spielfeld[0].length/2-1].equals("#") || !spielfeld[spieleryAxis-1][spielfeld[0].length/2-2].equals("#")) {
-                spieleryAxis -= 1; //Aufwärtsbewegung des Spielers
-                SpaceIsPressed = false;
+        if(SpaceIsPressed && spielerYAxis > 0){
+            this.PrintSpielfeld(spielfeld);
+            if(!spielfeld[spielerYAxis-1][spielfeld[0].length/2].equals("#") && !spielfeld[spielerYAxis-1][spielfeld[0].length/2-1].equals("#")) {
+                spielerYAxis--; //Aufwärtsbewegung des Spielers
+                SpaceIsPressed = false; //Zurücksetzen
             }
             else {
+                System.out.println("TEST1");
                 this.Death();
             }
         }
-        else if(spieleryAxis < spielfeld.length-2) { //Abwärtsbewegung des Spielers
-            if(!spielfeld[spieleryAxis+1][spielfeld[0].length/2-1].equals("#") || !spielfeld[spieleryAxis+1][spielfeld[0].length/2-2].equals("#")) {
-                spieleryAxis++; //Die spieleryAxis ist von oben nach unten; ++ bedeutet, um eins nach unten
+        else if(spielerYAxis < spielfeld.length-2) { //Abwärtsbewegung des Spielers
+            if(!spielfeld[spielerYAxis+1][spielfeld[0].length/2].equals("#") && !spielfeld[spielerYAxis+1][spielfeld[0].length/2-1].equals("#")) {
+                spielerYAxis++; //Die spielerYAxis ist von oben nach unten; ++ bedeutet, um eins nach unten
             }
             else {
+                System.out.println("TEST2");
                 this.Death();
             }
         }
 
-        //Löschen des bisherigen Spielers - Alter Spieler ist über dem Aktuellen
-        if((spieleryAxis-1) >= 0 && spielfeld[spieleryAxis-1][spielfeld[0].length/2].equals("*")) {
-            spielfeld[spieleryAxis-1][spielfeld[0].length/2] = ".";
-        }
-        if(spieleryAxis >= 0 && spielfeld[spieleryAxis][spielfeld[0].length/2-1].equals("/")) {
-            spielfeld[spieleryAxis][spielfeld[0].length/2-1] = ".";
-        }
-        //Löschen des bisherigen Spielers - Alter Spieler ist unter dem Aktuellen
-        if((spieleryAxis+1) <= spielfeld.length-1 && spielfeld[spieleryAxis+1][spielfeld[0].length/2].equals("*")) {
-            spielfeld[spieleryAxis+1][spielfeld[0].length/2] = ".";
-        }
-        if((spieleryAxis+2) <= spielfeld.length-1 && spielfeld[spieleryAxis+2][spielfeld[0].length/2-1].equals("/")) {
-            spielfeld[spieleryAxis+2 ][spielfeld[0].length/2-1] = ".";
-        }
+        spielfeld = this.deleteOldPlayer(spielfeld);
+
         //Abfrage von dem #-Turm über einem für den Score
         if(isTowerAbove(spielfeld)) {
             Score++;
         }
 
         //Darstellung des aktuellen Spielers
-        spielfeld[spieleryAxis][spielfeld[0].length/2] = "*";
-        spielfeld[spieleryAxis+1][spielfeld[0].length/2-1] = "/";
+        spielfeld[spielerYAxis][spielfeld[0].length/2] = "*";
+        spielfeld[spielerYAxis+1][spielfeld[0].length/2-1] = "/";
 
 
         this.PrintSpielfeld(spielfeld);
         return spielfeld;
     }
 
+    public String[][] deleteOldPlayer(String[][] spielfeld) {
+        //Löschen des bisherigen Spielers - Alter Spieler ist über dem Aktuellen
+        if((spielerYAxis-1) >= 0 && spielfeld[spielerYAxis-1][spielfeld[0].length/2].equals("*")) {
+            spielfeld[spielerYAxis-1][spielfeld[0].length/2] = ".";
+        }
+        if(spielerYAxis >= 0 && spielfeld[spielerYAxis][spielfeld[0].length/2-1].equals("/")) {
+            spielfeld[spielerYAxis][spielfeld[0].length/2-1] = ".";
+        }
+        //Löschen des bisherigen Spielers - Alter Spieler ist unter dem Aktuellen
+        if((spielerYAxis+1) <= spielfeld.length-1 && spielfeld[spielerYAxis+1][spielfeld[0].length/2].equals("*")) {
+            spielfeld[spielerYAxis+1][spielfeld[0].length/2] = ".";
+        }
+        if((spielerYAxis+2) <= spielfeld.length-1 && spielfeld[spielerYAxis+2][spielfeld[0].length/2-1].equals("/")) {
+            spielfeld[spielerYAxis+2 ][spielfeld[0].length/2-1] = ".";
+        }
+        return spielfeld;
+    }
+
     public boolean isTowerAbove(String[][] spielfeld) {
-        int spielerHoehe = spieleryAxis;
+        int spielerHoehe = spielerYAxis;
         while(spielerHoehe > 0) {
             if(spielfeld[spielerHoehe][spielfeld[0].length/2-1].equals("#")) {
                 return true;
@@ -190,29 +201,131 @@ public class Game {
         }
         return false;
     }
+
     public void Death() {
-        this.DeathAnimation(spielfeld);
-        System.exit(69420);
-    }
-
-    public void DeathAnimation(String[][] spielfeld) {
-        this.spielfeld = spielfeld;
-
+        //Leeren des Fensters
         for(int i = 0; i < 20; i++) {
             System.out.println(" ");
         }
+        //Darstellung des gestorbenen Spielers
         System.out.println(ANSI_RED + "                         *" + ANSI_RESET );
         System.out.println(ANSI_RED + "                        / " + ANSI_RESET );
+        //Animation
         for(int i = 0; i < 20; i++) {
             System.out.println(" ");
+            try {
+                Thread.sleep(100);
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        //Scores
+        System.out.println(ANSI_RED + "You're Dead. " + ANSI_RESET);
+        System.out.println(ANSI_GREEN + "Score: " + ANSI_RESET + ANSI_CYAN + Score + ANSI_RESET);
+        System.out.println(ANSI_GREEN + "Highscore: " + ANSI_RESET + ANSI_CYAN + this.HighScore(Score) + ANSI_RESET);
+        System.exit(69420);
+    }
+
+    public int HighScore(int score) {
+        this.Score = score;
+        //Datei erstellen, wenn sie noch nicht existiert
+        try {
+            File generateFile = new File("C:\\Users\\Public\\Documents\\HighScore.txt");
+            if (generateFile.createNewFile()) {
+                System.out.println(ANSI_YELLOW + "File created: 'C:\\Users\\Public\\Documents\\" + generateFile.getName() + "'" + ANSI_RESET); //else würde ausgeben, dass es bereits existiert
+            }
+        }
+        catch (Exception e) {
+            System.out.println("An error occurred.");
+        }
+        //Inhalt der Datei lesen - Import des bisherigen HighScores
+        String importScore = "-1";
+        int HighScore = -1;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("C:\\Users\\Public\\Documents\\HighScore.txt"))) {
+            try {
+                StringBuilder sb = new StringBuilder();
+                String line = bufferedReader.readLine();
+
+                while (line != null) {
+                    sb.append(line);
+                    sb.append(System.lineSeparator());
+                    line = bufferedReader.readLine();
+                }
+                importScore = sb.toString();
+            } finally {
+                bufferedReader.close();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            String importScoreFiltered = "";
+            if(importScore.matches("\\d{1}")) {
+                importScoreFiltered += importScore.charAt(0);
+            }
+            else if(importScore.matches("\\d{2}")) {
+                importScoreFiltered += importScore.charAt(0) + importScore.charAt(1);
+            }
+            else if(importScore.matches("\\d{3}")) {
+                importScoreFiltered += importScore.charAt(0) + importScore.charAt(1) + importScore.charAt(2);
+            }
+            else if(importScore.matches("\\d{4}")) {
+                importScoreFiltered += importScore.charAt(0) + importScore.charAt(1) + importScore.charAt(2) + importScore.charAt(3);
+            }
+            else if(importScore.matches("\\d{5}")) {
+                importScoreFiltered += importScore.charAt(0) + importScore.charAt(1) + importScore.charAt(2) + importScore.charAt(3) + importScore.charAt(4);
+            }
+            else {
+                importScoreFiltered += "-2";
+            }
+            HighScore = Integer.parseInt(importScoreFiltered);
+            System.out.println("Int HighScore: " + HighScore);
+        }
+        catch (Exception e) {
+            System.out.println("Error");
+        }
+
+        //In die Datei schreiben - Export HighScore
+        if(Score > HighScore) {
+            try {
+                FileWriter writeFile = new FileWriter("C:\\Users\\Public\\Documents\\HighScore.txt");
+                writeFile.write(String.valueOf(Score));
+                writeFile.close();
+            } catch (Exception e) {
+                System.out.println("An error occurred.");
+            }
+            return Score;
+        }
+        else {
+            return HighScore;
+        }
+    }
+
+    public void StartMenu() {
+        //Start Menü
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println(ANSI_RED + "        #####  #      #####  #####  #####  #   #     ####   #  #####  #### " + ANSI_RESET);
+        System.out.println(ANSI_YELLOW  + "       #      #      #   #  #   #  #   #   # #      #   #  #  #   #  #   # " + ANSI_RESET);
+        System.out.println(ANSI_GREEN  + "      ###    #      #####  #####  #####    #       ####   #  #####  #   # " + ANSI_RESET);
+        System.out.println(ANSI_BLUE  + "     #      #      #   #  #      #        #       #   #  #  # #    #   # " + ANSI_RESET);
+        System.out.println(ANSI_PURPLE  + "    #      #####  #   #  #      #        #       ####   #  #   #  ####  " + ANSI_RESET);
+
+        System.out.println(ANSI_BLUE + "                                                                      By me!" + ANSI_RESET);
+        System.out.println(ANSI_WHITE + "Info: Press 'Space' to jump!" + ANSI_RESET);
+        System.out.println(ANSI_CYAN + "Press 's' to start!" + ANSI_RESET);
+        System.out.println(" ");
+
+        while(!StartGame) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-
-        System.out.println("You're Dead. ");
-        System.out.println("Score: " + Score);
+        StartGame = false;
     }
 }

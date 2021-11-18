@@ -1,9 +1,16 @@
 package com.company;
 
+import java.util.Random;
+
 public class Main {
     public static void main(String[] args) {
         Game GameMechanik = new Game();
         KeyEventListener.KeyEventMain();
+        Random random = new Random();
+
+        //Start Menü
+        GameMechanik.StartMenu();
+
         //Erstellen
         String[][] Spielfeld = GameMechanik.CreateSpielfeld();
         Spielfeld = GameMechanik.Player(Spielfeld);
@@ -11,7 +18,8 @@ public class Main {
 
         for(int i = 0; i<100000;i++) {
             Spielfeld = GameMechanik.CreateTower(Spielfeld);
-            for(int j = 0; j<16;j++) {
+            int zufallszahl = random.nextInt(7);
+            for(int j = 0; j<(10+zufallszahl);j++) {
                 Spielfeld = GameMechanik.MoveMap(Spielfeld);
                 Spielfeld = GameMechanik.Player(Spielfeld);
                 // Game pausieren, damit man es überhaupt spielen kann
@@ -23,6 +31,7 @@ public class Main {
             }
         }
     }
+
 }
         /*
         spielfeld[0].length 50 x
