@@ -12,7 +12,7 @@ public class Main {
         GameMechanik.StartMenu();
 
         //Erstellen
-        String[][] Spielfeld = GameMechanik.CreateSpielfeld();
+        String[][][] Spielfeld = GameMechanik.CreateSpielfeld();
         Spielfeld = GameMechanik.Player(Spielfeld);
 
 

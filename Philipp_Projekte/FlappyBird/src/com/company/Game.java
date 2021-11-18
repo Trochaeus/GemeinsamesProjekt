@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Game {
     //Attribute
-    private String[][] spielfeld;
+    private String[][][] spielfeld;
     Random random = new Random();
     private int spielerYAxis = 5;
     private static boolean SpaceIsPressed;
@@ -25,21 +25,29 @@ public class Game {
 
 
     // Spielfeld erstellen
-    public String[][] CreateSpielfeld() {
+    public String[][][] CreateSpielfeld() {
         //Erstellen des Spielfeldes
-        spielfeld = new String[10][50];
+        spielfeld = new String[10][50][3];
         for(int yAxis = 0; yAxis < spielfeld.length; yAxis++) {
-            for (int xAxis = 0; xAxis < spielfeld[0].length; xAxis++) {
-                int wahrscheinlichkeitWolke = random.nextInt(15);
-                if(wahrscheinlichkeitWolke == 0 && spielfeld[yAxis][xAxis] == null && yAxis < spielfeld.length/2) {
-                    spielfeld[yAxis][xAxis] = "~";
-                    if((xAxis+1) < spielfeld[0].length-1){
-                        spielfeld[yAxis][xAxis + 1] = "~";
+            for(int xAxis = 0; xAxis < spielfeld[0].length; xAxis++) {
+                for(int Layer = 0;Layer < spielfeld[0][0].length;Layer++) {
+                    //Layer 0: Bird, Layer 1: Tower, Layer 2: Background
+                    //Bird und Tower Layer bekommen das (später) nicht sichtbare Zeichen "%"
+                    if(Layer < 2) {
+                        spielfeld[yAxis][xAxis][Layer] = "%";
                     }
-                }
-                else {
-                    if(spielfeld[yAxis][xAxis] == null) {
-                        spielfeld[yAxis][xAxis] = ".";
+                    //BackgroundLayer
+                    if(Layer == 2) {
+                        int wahrscheinlichkeitWolke = random.nextInt(15);
+                        if (wahrscheinlichkeitWolke == 0) {
+                            spielfeld[yAxis][xAxis][2] = "~";
+                            if ((xAxis + 1) < spielfeld[0].length - 1 && yAxis < spielfeld.length/1.5) {
+                                spielfeld[yAxis][xAxis + 1][2] = "~";
+                            }
+                        }
+                        else if (spielfeld[yAxis][xAxis][2] == null) {
+                            spielfeld[yAxis][xAxis][2] = ".";
+                        }
                     }
                 }
             }
@@ -48,99 +56,102 @@ public class Game {
     }
 
     // Spielfeld Ausgabe
-    public void PrintSpielfeld(String[][] spielfeld) {
+    public void PrintSpielfeld(String[][][] spielfeld) {
         this.spielfeld = spielfeld;
 
         System.out.println(" ");
         System.out.println(" ");
         System.out.println(" ");
         System.out.println(" ");
+        System.out.println(ANSI_WHITE + " __________________________________________________");
+        System.out.print(ANSI_WHITE + "|");
         for(int yAxis = 0; yAxis < spielfeld.length; yAxis++) {
             for (int xAxis = 0; xAxis < spielfeld[0].length; xAxis++) {
-                switch (spielfeld[yAxis][xAxis]) {
-                    case "." -> System.out.print(ANSI_CYAN + spielfeld[yAxis][xAxis] + ANSI_RESET); //Hintergrund
-                    case "#", "|" -> System.out.print(ANSI_GREEN + spielfeld[yAxis][xAxis] + ANSI_RESET); //Türme
-                    case "*", "/" -> System.out.print(ANSI_YELLOW + spielfeld[yAxis][xAxis] + ANSI_RESET); //Spieler
-                    case "~" -> System.out.print(spielfeld[yAxis][xAxis]); //Wolken/Hintergrund
-                    default -> System.out.print(ANSI_PURPLE + spielfeld[yAxis][xAxis] + ANSI_RESET); //Sollte eigentlich nicht vorkommen
+                for (int Layer = 0; Layer < spielfeld[0][0].length; Layer++) {
+                    if(!spielfeld[yAxis][xAxis][Layer].equals("%")) {
+                        //Layer 0: Bird, Layer 1: Tower, Layer 2: Background, % bedeutet leer
+                        switch (spielfeld[yAxis][xAxis][Layer]) {
+                            case ".":
+                                if(spielfeld[yAxis][xAxis][0].equals("%") && spielfeld[yAxis][xAxis][1].equals("%")) {
+                                    System.out.print(ANSI_CYAN + spielfeld[yAxis][xAxis][2] + ANSI_RESET); //Hintergrund NUR ANZEIGEN, wenn alles davor leer ist
+                                }
+                                break;
+                            case "~":
+                                if(spielfeld[yAxis][xAxis][0].equals("%") && spielfeld[yAxis][xAxis][1].equals("%")) {
+                                    System.out.print(spielfeld[yAxis][xAxis][2]); //Wolken/Hintergrund NUR ANZEIGEN, wenn alles davor leer ist
+                                }
+                                break;
+                            case "#", "|":
+                                if(spielfeld[yAxis][xAxis][0].equals("%")) {
+                                    System.out.print(ANSI_GREEN + spielfeld[yAxis][xAxis][1] + ANSI_RESET); //Türme NUR ANZEIGEN, wenn alles davor leer ist
+                                }
+                                break;
+                            case "*", "/":
+                                System.out.print(ANSI_YELLOW + spielfeld[yAxis][xAxis][0] + ANSI_RESET); //Spieler IMMER ANZEIGEN
+                                break;
+                            default:
+                                System.out.print(ANSI_PURPLE + spielfeld[yAxis][xAxis][Layer] + ANSI_RESET); //Sollte eigentlich nicht vorkommen
+                                break;
+                        }
+                    }
                 }
             }
             if(yAxis == spielfeld.length-1){
-                System.out.println("    Score: " + Score);
+                System.out.println(ANSI_WHITE + "|"  + ANSI_RESET + ANSI_GREEN + " Score: " + ANSI_RESET + ANSI_CYAN + Score + ANSI_RESET);
             }
             else {
-                System.out.println(" ");
+                System.out.println(ANSI_WHITE + "|" + ANSI_RESET);
+                System.out.print(ANSI_WHITE + "|" + ANSI_RESET);
             }
         }
+        System.out.println(ANSI_WHITE + " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ " + ANSI_RESET);
     }
 
     // Erstellen eines Turmes
-    public String[][] CreateTower(String[][] spielfeld) {
+    public String[][][] CreateTower(String[][][] spielfeld) {
         this.spielfeld = spielfeld;
 
         int TurmOben = random.nextInt(5);
         int zufallszahl = random.nextInt(3);
-        int TurmUnten = TurmOben+4;
+        int TurmUnten = TurmOben + 4 + zufallszahl;
 
-        spielfeld[TurmOben][spielfeld[0].length-1] = "#";
-        while(TurmOben > 0) {
-            spielfeld[TurmOben-1][spielfeld[0].length-1] = "|";
+        spielfeld[TurmOben][spielfeld[0].length - 1][1] = "#";
+        while (TurmOben > 0) {
+            spielfeld[TurmOben - 1][spielfeld[0].length - 1][1] = "|";
             TurmOben--;
         }
-        if(TurmOben <= 4) {
-            spielfeld[TurmUnten][spielfeld[0].length-1] = "#";
-            while((TurmUnten+1) != spielfeld.length) {
-                spielfeld[TurmUnten+1][spielfeld[0].length-1] = "|";
+        if(TurmUnten <= spielfeld.length) {
+            spielfeld[TurmUnten][spielfeld[0].length - 1][1] = "#";
+            while ((TurmUnten + 1) != spielfeld.length) {
+                spielfeld[TurmUnten + 1][spielfeld[0].length - 1][1] = "|";
                 TurmUnten++;
             }
         }
+
         this.PrintSpielfeld(spielfeld);
         return spielfeld;
     }
 
     //Spielfeld nach Links bewegen
-    public String[][] MoveMap(String[][] spielfeld) {
+    public String[][][] MoveMap(String[][][] spielfeld) {
         this.spielfeld = spielfeld;
         for (int yAxis = 0; yAxis < spielfeld.length; yAxis++) {
             for (int xAxis = 0; xAxis < spielfeld[0].length; xAxis++) {
-
                 //Testen auf Spieler - Kollision mit Turm
-                if ((xAxis + 1) < spielfeld[0].length && spielfeld[yAxis][xAxis].equals("*") || spielfeld[yAxis][xAxis].equals("/")) {
-                    //Testen auf Turm
-                    if(spielfeld[yAxis][xAxis + 1].equals("|") || spielfeld[yAxis][xAxis + 1].equals("#")) {
-                        this.Death();
-                    }
+                if(spielerYAxis < spielfeld.length
+                        && spielfeld[spielerYAxis][spielfeld[0].length/2][1].equals("#")
+                        || spielfeld[spielerYAxis][spielfeld[0].length/2][1].equals("|")
+                        || spielfeld[spielerYAxis+1][(spielfeld[0].length/2)-1][1].equals("#")
+                        || spielfeld[spielerYAxis+1][(spielfeld[0].length/2)-1][1].equals("|")) {
+                    this.Death();
                 }
-                //Wolken verschieben (Hinter den Spieler)
-                if ((xAxis + 1) < spielfeld[0].length && (xAxis-1) > 0
-                        && spielfeld[yAxis][xAxis + 1].equals("~")) {
-                    if(spielfeld[yAxis][xAxis].equals("*") || spielfeld[yAxis][xAxis].equals("/")) {
-                        if(spielfeld[yAxis][xAxis-1].equals("|") && spielfeld[yAxis][xAxis-1].equals("#"))
-                        spielfeld[yAxis][xAxis - 1] = "~"; //Wolke eins hinter den Spieler verschieben
-                    }
-                }
-
                 //Feld verschieben
-                if ((xAxis + 1) < spielfeld[0].length
-                        && !spielfeld[yAxis][xAxis + 1].equals("*")
-                        && !spielfeld[yAxis][xAxis + 1].equals("/")
-                        && !spielfeld[yAxis][xAxis].equals("*")
-                        && !spielfeld[yAxis][xAxis].equals("/")) {
-                    spielfeld[yAxis][xAxis] = spielfeld[yAxis][xAxis + 1]; //Icons eins nach links verschieben
+                if ((xAxis + 1) < spielfeld[0].length) {
+                    spielfeld[yAxis][xAxis][1] = spielfeld[yAxis][xAxis+1][1]; //Icons eins nach links verschieben
                 }
-
-
-                //In letzter Spalte neue Punkte bilden
-                if(spielfeld[yAxis][spielfeld[0].length-2].equals("#") || spielfeld[yAxis][spielfeld[0].length - 2].equals("|") || spielfeld[yAxis][spielfeld[0].length - 2].equals("~")) {
-                    spielfeld[yAxis][spielfeld[0].length-1] = ".";         //"." in letzter Spalte - entfernt die Türme und die Wolken, die sich unendlich bilden
-                }
-                //Bilden neuer Wolken
-                if(!spielfeld[yAxis][spielfeld[0].length-2].equals("#") && !spielfeld[yAxis][spielfeld[0].length - 2].equals("|") && !spielfeld[yAxis][spielfeld[0].length - 2].equals("~") && !spielfeld[yAxis][spielfeld[0].length-3].equals("#") && !spielfeld[yAxis][spielfeld[0].length - 3].equals("|") && !spielfeld[yAxis][spielfeld[0].length - 3].equals("~")) {
-                    int zufallszahl = random.nextInt(300);
-                    if(zufallszahl == 0 && yAxis < spielfeld.length/2) {
-                        spielfeld[yAxis][spielfeld[0].length - 2] = "~";
-                        spielfeld[yAxis][spielfeld[0].length - 3] = "~";
-                    }
+                //In letzte Spalte leeren bilden
+                if(spielfeld[yAxis][spielfeld[0].length-2][1].equals("#") || spielfeld[yAxis][spielfeld[0].length - 2][1].equals("|") || spielfeld[yAxis][spielfeld[0].length - 2][1].equals("~")) {
+                    spielfeld[yAxis][spielfeld[0].length-1][1] = "%";         //"." in letzter Spalte - entfernt die Türme und die Wolken, die sich unendlich bilden
                 }
             }
         }
@@ -154,26 +165,16 @@ public class Game {
     }
 
     //Spieler
-    public String[][] Player(String[][] spielfeld) {
+    public String[][][] Player(String[][][] spielfeld) {
         this.spielfeld = spielfeld;
 
         if(SpaceIsPressed && spielerYAxis > 0){
             this.PrintSpielfeld(spielfeld);
-            if(!spielfeld[spielerYAxis-1][spielfeld[0].length/2].equals("#") && !spielfeld[spielerYAxis-1][spielfeld[0].length/2-1].equals("#")) {
-                spielerYAxis--; //Aufwärtsbewegung des Spielers
-                SpaceIsPressed = false; //Zurücksetzen
-            }
-            else {
-                this.Death();
-            }
+            spielerYAxis--; //Aufwärtsbewegung des Spielers
+            SpaceIsPressed = false; //Zurücksetzen
         }
         else if(spielerYAxis < spielfeld.length-2) { //Abwärtsbewegung des Spielers
-            if(!spielfeld[spielerYAxis+1][spielfeld[0].length/2].equals("#") && !spielfeld[spielerYAxis+1][spielfeld[0].length/2-1].equals("#")) {
-                spielerYAxis++; //Die spielerYAxis ist von oben nach unten; ++ bedeutet, um eins nach unten
-            }
-            else {
-                this.Death();
-            }
+            spielerYAxis++; //Die spielerYAxis ist von oben nach unten; ++ bedeutet, um eins nach unten
         }
 
         spielfeld = this.deleteOldPlayer(spielfeld);
@@ -184,36 +185,40 @@ public class Game {
         }
 
         //Darstellung des aktuellen Spielers
-        spielfeld[spielerYAxis][spielfeld[0].length/2] = "*";
-        spielfeld[spielerYAxis+1][spielfeld[0].length/2-1] = "/";
+        spielfeld[spielerYAxis][spielfeld[0].length/2][0] = "*";
+        spielfeld[spielerYAxis+1][spielfeld[0].length/2-1][0] = "/";
 
+        //Berührt der Spieler einen Turm
+        if(!spielfeld[spielerYAxis][spielfeld[0].length/2][1].equals("%") && !spielfeld[spielerYAxis+1][spielfeld[0].length/2-1][1].equals("%")) {
+            this.Death();
+        }
 
         this.PrintSpielfeld(spielfeld);
         return spielfeld;
     }
 
-    public String[][] deleteOldPlayer(String[][] spielfeld) {
+    public String[][][] deleteOldPlayer(String[][][] spielfeld) {
         //Löschen des bisherigen Spielers - Alter Spieler ist über dem Aktuellen
-        if((spielerYAxis-1) >= 0 && spielfeld[spielerYAxis-1][spielfeld[0].length/2].equals("*")) {
-            spielfeld[spielerYAxis-1][spielfeld[0].length/2] = ".";
+        if((spielerYAxis-1) >= 0 && spielfeld[spielerYAxis-1][spielfeld[0].length/2][0].equals("*")) {
+            spielfeld[spielerYAxis-1][spielfeld[0].length/2][0] = "%";
         }
-        if(spielerYAxis >= 0 && spielfeld[spielerYAxis][spielfeld[0].length/2-1].equals("/")) {
-            spielfeld[spielerYAxis][spielfeld[0].length/2-1] = ".";
+        if(spielerYAxis >= 0 && spielfeld[spielerYAxis][spielfeld[0].length/2-1][0].equals("/")) {
+            spielfeld[spielerYAxis][spielfeld[0].length/2-1][0] = "%";
         }
         //Löschen des bisherigen Spielers - Alter Spieler ist unter dem Aktuellen
-        if((spielerYAxis+1) <= spielfeld.length-1 && spielfeld[spielerYAxis+1][spielfeld[0].length/2].equals("*")) {
-            spielfeld[spielerYAxis+1][spielfeld[0].length/2] = ".";
+        if((spielerYAxis+1) <= spielfeld.length-1 && spielfeld[spielerYAxis+1][spielfeld[0].length/2][0].equals("*")) {
+            spielfeld[spielerYAxis+1][spielfeld[0].length/2][0] = "%";
         }
-        if((spielerYAxis+2) <= spielfeld.length-1 && spielfeld[spielerYAxis+2][spielfeld[0].length/2-1].equals("/")) {
-            spielfeld[spielerYAxis+2 ][spielfeld[0].length/2-1] = ".";
+        if((spielerYAxis+2) <= spielfeld.length-1 && spielfeld[spielerYAxis+2][spielfeld[0].length/2-1][0].equals("/")) {
+            spielfeld[spielerYAxis+2 ][spielfeld[0].length/2-1][0] = "%";
         }
         return spielfeld;
     }
 
-    public boolean isTowerAbove(String[][] spielfeld) {
+    public boolean isTowerAbove(String[][][] spielfeld) {
         int spielerHoehe = spielerYAxis;
         while(spielerHoehe > 0) {
-            if(spielfeld[spielerHoehe][spielfeld[0].length/2-1].equals("#")) {
+            if(spielfeld[spielerHoehe][spielfeld[0].length/2-1][1].equals("#")) {
                 return true;
             }
             else {
@@ -283,27 +288,8 @@ public class Game {
             e.printStackTrace();
         }
         try {
-            String importScoreFiltered = "";
-            if(importScore.matches("\\d{1}")) {
-                importScoreFiltered += importScore.charAt(0);
-            }
-            else if(importScore.matches("\\d{2}")) {
-                importScoreFiltered += importScore.charAt(0) + importScore.charAt(1);
-            }
-            else if(importScore.matches("\\d{3}")) {
-                importScoreFiltered += importScore.charAt(0) + importScore.charAt(1) + importScore.charAt(2);
-            }
-            else if(importScore.matches("\\d{4}")) {
-                importScoreFiltered += importScore.charAt(0) + importScore.charAt(1) + importScore.charAt(2) + importScore.charAt(3);
-            }
-            else if(importScore.matches("\\d{5}")) {
-                importScoreFiltered += importScore.charAt(0) + importScore.charAt(1) + importScore.charAt(2) + importScore.charAt(3) + importScore.charAt(4);
-            }
-            else {
-                importScoreFiltered += "-2";
-            }
+            String importScoreFiltered = importScore.replace("\n", "").replace("\r", "");
             HighScore = Integer.parseInt(importScoreFiltered);
-            System.out.println("Int HighScore: " + HighScore);
         }
         catch (Exception e) {
             System.out.println("Error");
