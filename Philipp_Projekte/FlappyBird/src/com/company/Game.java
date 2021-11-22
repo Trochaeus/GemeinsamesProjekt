@@ -58,53 +58,7 @@ public class Game {
     // Spielfeld Ausgabe
     public void PrintSpielfeld(String[][][] spielfeld) {
         this.spielfeld = spielfeld;
-
-        System.out.println(" ");
-        System.out.println(" ");
-        System.out.println(" ");
-        System.out.println(" ");
-        System.out.println(ANSI_WHITE + " __________________________________________________");
-        System.out.print(ANSI_WHITE + "|");
-        for(int yAxis = 0; yAxis < spielfeld.length; yAxis++) {
-            for (int xAxis = 0; xAxis < spielfeld[0].length; xAxis++) {
-                for (int Layer = 0; Layer < spielfeld[0][0].length; Layer++) {
-                    if(!spielfeld[yAxis][xAxis][Layer].equals("%")) {
-                        //Layer 0: Bird, Layer 1: Tower, Layer 2: Background, % bedeutet leer
-                        switch (spielfeld[yAxis][xAxis][Layer]) {
-                            case ".":
-                                if(spielfeld[yAxis][xAxis][0].equals("%") && spielfeld[yAxis][xAxis][1].equals("%")) {
-                                    System.out.print(ANSI_CYAN + spielfeld[yAxis][xAxis][2] + ANSI_RESET); //Hintergrund NUR ANZEIGEN, wenn alles davor leer ist
-                                }
-                                break;
-                            case "~":
-                                if(spielfeld[yAxis][xAxis][0].equals("%") && spielfeld[yAxis][xAxis][1].equals("%")) {
-                                    System.out.print(spielfeld[yAxis][xAxis][2]); //Wolken/Hintergrund NUR ANZEIGEN, wenn alles davor leer ist
-                                }
-                                break;
-                            case "#", "|":
-                                if(spielfeld[yAxis][xAxis][0].equals("%")) {
-                                    System.out.print(ANSI_GREEN + spielfeld[yAxis][xAxis][1] + ANSI_RESET); //Türme NUR ANZEIGEN, wenn alles davor leer ist
-                                }
-                                break;
-                            case "*", "/":
-                                System.out.print(ANSI_YELLOW + spielfeld[yAxis][xAxis][0] + ANSI_RESET); //Spieler IMMER ANZEIGEN
-                                break;
-                            default:
-                                System.out.print(ANSI_PURPLE + spielfeld[yAxis][xAxis][Layer] + ANSI_RESET); //Sollte eigentlich nicht vorkommen
-                                break;
-                        }
-                    }
-                }
-            }
-            if(yAxis == spielfeld.length-1){
-                System.out.println(ANSI_WHITE + "|"  + ANSI_RESET + ANSI_GREEN + " Score: " + ANSI_RESET + ANSI_CYAN + Score + ANSI_RESET);
-            }
-            else {
-                System.out.println(ANSI_WHITE + "|" + ANSI_RESET);
-                System.out.print(ANSI_WHITE + "|" + ANSI_RESET);
-            }
-        }
-        System.out.println(ANSI_WHITE + " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ " + ANSI_RESET);
+        KeyEventListener.displayGame(spielfeld,Score);
     }
 
     // Erstellen eines Turmes
@@ -120,7 +74,7 @@ public class Game {
             spielfeld[TurmOben - 1][spielfeld[0].length - 1][1] = "|";
             TurmOben--;
         }
-        if(TurmUnten <= spielfeld.length) {
+        if(TurmUnten < spielfeld.length) {
             spielfeld[TurmUnten][spielfeld[0].length - 1][1] = "#";
             while ((TurmUnten + 1) != spielfeld.length) {
                 spielfeld[TurmUnten + 1][spielfeld[0].length - 1][1] = "|";
@@ -228,28 +182,12 @@ public class Game {
         return false;
     }
 
+    public int getSpielerYAxis() {
+        return spielerYAxis;
+    }
+
     public void Death() {
-        //Leeren des Fensters
-        for(int i = 0; i < 20; i++) {
-            System.out.println(" ");
-        }
-        //Darstellung des gestorbenen Spielers
-        System.out.println(ANSI_RED + "                         *" + ANSI_RESET );
-        System.out.println(ANSI_RED + "                        / " + ANSI_RESET );
-        //Animation
-        for(int i = 0; i < 20; i++) {
-            System.out.println(" ");
-            try {
-                Thread.sleep(100);
-            }
-            catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        //Scores
-        System.out.println(ANSI_RED + "You're Dead. " + ANSI_RESET);
-        System.out.println(ANSI_GREEN + "Score: " + ANSI_RESET + ANSI_CYAN + Score + ANSI_RESET);
-        System.out.println(ANSI_GREEN + "Highscore: " + ANSI_RESET + ANSI_CYAN + this.HighScore(Score) + ANSI_RESET);
+        KeyEventListener.deathScreen(getSpielerYAxis(),Score,this.HighScore(Score));
         System.exit(69420);
     }
 
@@ -312,6 +250,14 @@ public class Game {
     }
 
     public void StartMenu() {
+        //Warten, damit sich die GUI aufbauen kann
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        KeyEventListener.ShowMenu();
+
         //Start Menü
         System.out.println(" ");
         System.out.println(" ");
@@ -325,6 +271,7 @@ public class Game {
         System.out.println(ANSI_WHITE + "Info: Press 'Space' to jump!" + ANSI_RESET);
         System.out.println(ANSI_CYAN + "Press 's' to start!" + ANSI_RESET);
         System.out.println(" ");
+
 
         while(!StartGame) {
             try {
