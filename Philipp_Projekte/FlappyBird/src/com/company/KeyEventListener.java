@@ -9,27 +9,18 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
     static JTextArea displayArea;
     static JTextField typingArea;
 
+
     public KeyEventListener() {
-        super("EventListener");
+        super("Floppy Bird");
     }
     public static void KeyEventMain() {
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        } catch (UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        } catch (IllegalAccessException ex) {
-            ex.printStackTrace();
-        } catch (InstantiationException ex) {
-            ex.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("Error SetLookAndFeel");
         }
         UIManager.put("swing.boldMetal", Boolean.FALSE);
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
+        javax.swing.SwingUtilities.invokeLater(KeyEventListener::createAndShowGUI);
     }
     private static void createAndShowGUI() {
         KeyEventListener frame = new KeyEventListener();
@@ -85,9 +76,14 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
 
     public static void displayGame(String[][][] printSpielfeld, int Score) {
         spielfeld = printSpielfeld;
-        int score = Score;
-
-        typingArea.setText("Score: " + score);
+        switch(Main.Difficulty) {
+            case 1 -> typingArea.setText("Baby - Score: " + Score);
+            case 2 -> typingArea.setText("Easy - Score: " + Score);
+            case 3 -> typingArea.setText("Normal - Score: " + Score);
+            case 4 -> typingArea.setText("Hard - Score: " + Score);
+            case 5 -> typingArea.setText("Godmode - Score: " + Score);
+            case 6 -> typingArea.setText("Botmode - Score: " + Score);
+        }
         displayArea.setText("");
         for (int yAxis = 0; yAxis < spielfeld.length; yAxis++) {
             for (int xAxis = 0; xAxis < spielfeld[0].length; xAxis++) {
@@ -130,9 +126,9 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
         displayArea.append(newline);
         displayArea.append("        #####  #      #####  #####  #####  #   #     ####   #  #####  ####  " + newline);
         displayArea.append("       #      #      #   #  #   #  #   #   # #      #   #  #  #   #  #   # " + newline);
-        displayArea.append("      ###    #      #####  #####  #####    #       ####   #  #####  #   # " + newline);
+        displayArea.append("      ###    #      #   #  #####  #####    #       ####   #  #####  #   # " + newline);
         displayArea.append("     #      #      #   #  #      #        #       #   #  #  # #    #   # " + newline);
-        displayArea.append("    #      #####  #   #  #      #        #       ####   #  #   #  ####  " + newline);
+        displayArea.append("    #      #####  #####  #      #        #       ####   #  #   #  ####  " + newline);
         displayArea.append("                                                                      By me!" + newline);
 
         displayArea.append("Info: Press 'Space' to jump!" + newline);
@@ -143,12 +139,12 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
         displayArea.setText("");
         //Schwierigkeit
         displayArea.append("Choose: " + newline);
-        displayArea.append("  1 - Easy" + newline);
-        displayArea.append("  2 - Normal" + newline);
-        displayArea.append("  3 - Hard" + newline);
-        displayArea.append("  4 - Godmode" + newline);
-        displayArea.append("  5 - Botmode" + newline);
-        displayArea.append("  6 - lol" + newline);
+        displayArea.append("  1 - Baby" + newline);
+        displayArea.append("  2 - Easy" + newline);
+        displayArea.append("  3 - Normal" + newline);
+        displayArea.append("  4 - Hard" + newline);
+        displayArea.append("  5 - Godmode" + newline);
+        displayArea.append("  6 - Botmode" + newline);
     }
 
 
@@ -217,12 +213,12 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
         displayArea.append(newline);
 
         switch(Main.Difficulty) {
-            case 1 -> displayArea.append("Difficulty: Easy" +  newline);
-            case 2 -> displayArea.append("Difficulty: Normal" +  newline);
-            case 3 -> displayArea.append("Difficulty: Hard" +  newline);
-            case 4 -> displayArea.append("Difficulty: Godmode" +  newline);
-            case 5 -> displayArea.append("Difficulty: Botmode" +  newline);
-            case 6 -> displayArea.append("Difficulty: lol" +  newline);
+            case 1 -> displayArea.append("Difficulty: Baby" +  newline);
+            case 2 -> displayArea.append("Difficulty: Easy" +  newline);
+            case 3 -> displayArea.append("Difficulty: Normal" +  newline);
+            case 4 -> displayArea.append("Difficulty: Hard" +  newline);
+            case 5 -> displayArea.append("Difficulty: Godmode" +  newline);
+            case 6 -> displayArea.append("Difficulty: Botmode" +  newline);
         }
 
         displayArea.append("Your Score: "+ Score +  newline);

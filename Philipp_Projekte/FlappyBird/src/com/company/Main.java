@@ -28,7 +28,7 @@ public class Main {
         Spielfeld = GameMechanik.Player(Spielfeld);
 
 
-        for(int i = 0; i<100000;i++) {
+        while(true) {
             Spielfeld = GameMechanik.CreateTower(Spielfeld);
             int zufallszahl = random.nextInt(7);
             for(int j = 0; j<(10+zufallszahl);j++) {
@@ -49,7 +49,6 @@ public class Main {
                 }
             }
         }
-        System.out.println("Du spielst zu viel. Du hast gewonnen. Aber war es das wirklich wert?");
     }
 }
         /*

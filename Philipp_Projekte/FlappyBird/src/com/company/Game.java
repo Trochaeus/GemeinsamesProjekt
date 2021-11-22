@@ -65,7 +65,7 @@ public class Game {
     public String[][][] CreateTower(String[][][] spielfeld) {
         this.spielfeld = spielfeld;
 
-        int TurmOben = random.nextInt(5);
+        int TurmOben = random.nextInt(4);
         int zufallszahl = random.nextInt(3);
         int TurmUnten = TurmOben + 4 + zufallszahl;
 
@@ -220,9 +220,8 @@ public class Game {
             } finally {
                 bufferedReader.close();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         try {
@@ -263,9 +262,9 @@ public class Game {
         System.out.println(" ");
         System.out.println(ANSI_RED + "        #####  #      #####  #####  #####  #   #     ####   #  #####  #### " + ANSI_RESET);
         System.out.println(ANSI_YELLOW  + "       #      #      #   #  #   #  #   #   # #      #   #  #  #   #  #   # " + ANSI_RESET);
-        System.out.println(ANSI_GREEN  + "      ###    #      #####  #####  #####    #       ####   #  #####  #   # " + ANSI_RESET);
+        System.out.println(ANSI_GREEN  + "      ###    #      #   #  #####  #####    #       ####   #  #####  #   # " + ANSI_RESET);
         System.out.println(ANSI_BLUE  + "     #      #      #   #  #      #        #       #   #  #  # #    #   # " + ANSI_RESET);
-        System.out.println(ANSI_PURPLE  + "    #      #####  #   #  #      #        #       ####   #  #   #  ####  " + ANSI_RESET);
+        System.out.println(ANSI_PURPLE  + "    #      #####  #####  #      #        #       ####   #  #   #  ####  " + ANSI_RESET);
 
         System.out.println(ANSI_BLUE + "                                                                      By me!" + ANSI_RESET);
         System.out.println(ANSI_WHITE + "Info: Press 'Space' to jump!" + ANSI_RESET);
