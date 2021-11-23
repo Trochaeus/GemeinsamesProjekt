@@ -31,7 +31,7 @@ public class Main {
 
         BufferedImage image;
         try {
-            File input = new File("C:\\Users\\pgerhardy\\GIT\\GemeinsamesProjekt\\Philipp_Projekte\\SchwarzWeissFilter\\color.jpg");
+            File input = new File("C:\\Users\\pgerhardy\\GIT\\GemeinsamesProjekt\\Philipp_Projekte\\ColorlessMusterloesung\\color.jpg");
             image = ImageIO.read(input);
             int width = image.getWidth();
             int height = image.getHeight();
@@ -64,7 +64,7 @@ public class Main {
                     image.setRGB(j,i,newColor.getRGB());
                 }
             }
-            File ouptut = new File("C:\\Users\\pgerhardy\\GIT\\GemeinsamesProjekt\\Philipp_Projekte\\SchwarzWeissFilter\\GetauschteFarben.jpg");
+            File ouptut = new File("C:\\Users\\pgerhardy\\GIT\\GemeinsamesProjekt\\Philipp_Projekte\\ColorlessMusterloesung\\GetauschteFarben.jpg");
             System.out.println("Done");
             ImageIO.write(image, "jpg", ouptut);
         }

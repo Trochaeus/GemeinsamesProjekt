@@ -1,4 +1,10 @@
 package com.company;
+// NICHT PRAKTISCH FÜR MICH; DA ZEILENWEISE
+// NICHT PRAKTISCH FÜR MICH; DA ZEILENWEISE
+// NICHT PRAKTISCH FÜR MICH; DA ZEILENWEISE
+// NICHT PRAKTISCH FÜR MICH; DA ZEILENWEISE
+// NICHT PRAKTISCH FÜR MICH; DA ZEILENWEISE
+// NICHT PRAKTISCH FÜR MICH; DA ZEILENWEISE
 
 import java.awt.*;
 import javax.swing.*;
@@ -9,6 +15,7 @@ public class TextPaneHighlighting {
     private static final long serialVersionUID = 1L;
     private Highlighter.HighlightPainter cyanPainter;
     private Highlighter.HighlightPainter redPainter;
+    private Highlighter.HighlightPainter greenPainter;
 
     public TextPaneHighlighting() {
         JFrame frame = new JFrame();
@@ -18,10 +25,12 @@ public class TextPaneHighlighting {
         frame.add(scrollPane, BorderLayout.CENTER);//  Highlight some text
         cyanPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.cyan);
         redPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.red);
+        greenPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.green);
         try {
-            textPane.getHighlighter().addHighlight(0, 3, DefaultHighlighter.DefaultPainter);
-            textPane.getHighlighter().addHighlight(8, 14, cyanPainter);
-            textPane.getHighlighter().addHighlight(19, 24, redPainter);
+            //textPane.getHighlighter().addHighlight(0, 3, DefaultHighlighter.DefaultPainter);
+            //textPane.getHighlighter().addHighlight(8, 14, cyanPainter);
+            //textPane.getHighlighter().addHighlight(19, 24, redPainter);
+            textPane.getHighlighter().addHighlight(0,14,greenPainter);
         } catch (BadLocationException ble) {
         }
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -1,4 +1,5 @@
 package com.company;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -6,9 +7,12 @@ import javax.swing.*;
 public class KeyEventListener extends JFrame implements KeyListener, ActionListener {
     private static String[][][] spielfeld;
     static final String newline = System.getProperty("line.separator");
+
+    //wow static JPanel topPanel;
+    //static JTextPane displayArea_NEW;
     static JTextArea displayArea;
     static JTextField typingArea;
-
+    static boolean nochKeineSchwierigkeitGewaehlt = true;
 
     public KeyEventListener() {
         super("Floppy Bird");
@@ -41,10 +45,10 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
         getContentPane().add(scrollPane, BorderLayout.CENTER);
     }
 
-    public void keyTyped(KeyEvent e) {
-        //
-    }
-
+    //Brauche ich nicht, kann es aber auch nicht löschen - abstrakt funktioniert nicht
+    public void keyTyped(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {}
+    public void actionPerformed(ActionEvent e) {} //War für den Button
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -55,23 +59,14 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
             typingArea.setText("");
             Game.StartGame = true;
         }
-        else if(e.getKeyChar() == '1' || e.getKeyChar() == '2' || e.getKeyChar() == '3' || e.getKeyChar() == '4' || e.getKeyChar() == '5' || e.getKeyChar() == '6') {
-            Main.Difficulty = (int) e.getKeyChar()-48;
-            Main.StartGame = true;
+        else if(nochKeineSchwierigkeitGewaehlt) {
+            if(e.getKeyChar() == '1' || e.getKeyChar() == '2' || e.getKeyChar() == '3' || e.getKeyChar() == '4' || e.getKeyChar() == '5' || e.getKeyChar() == '6') {
+                Main.Difficulty = (int) e.getKeyChar() - 48; //Rückgabe Wert 48 zu hoch (Position 0,1,2... in ASCII-Tabelle)
+                Main.StartGame = true;
+                nochKeineSchwierigkeitGewaehlt = false;
+            }
         }
         typingArea.setText("");
-    }
-
-
-    public void keyReleased(KeyEvent e) {
-        //
-    }
-
-    //Handle the button click.
-    public void actionPerformed(ActionEvent e) {
-        displayArea.setText("");
-        typingArea.setText("");
-        typingArea.requestFocusInWindow();
     }
 
     public static void displayGame(String[][][] printSpielfeld, int Score) {
@@ -121,16 +116,45 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
     }
 
     public static void ShowMenu(){
-        displayArea.setText(" ");
         //Start Menü
-        displayArea.append(newline);
-        displayArea.append("        #####  #      #####  #####  #####  #   #     ####   #  #####  ####  " + newline);
-        displayArea.append("       #      #      #   #  #   #  #   #   # #      #   #  #  #   #  #   # " + newline);
-        displayArea.append("      ###    #      #   #  #####  #####    #       ####   #  #####  #   # " + newline);
-        displayArea.append("     #      #      #   #  #      #        #       #   #  #  # #    #   # " + newline);
-        displayArea.append("    #      #####  #####  #      #        #       ####   #  #   #  ####  " + newline);
-        displayArea.append("                                                                      By me!" + newline);
+        String[] banner = {"    #####  #      #####  #####  #####  #   #     ####   #  #####  ####  ",
+                           "   #      #      #   #  #   #  #   #   # #      #   #  #  #   #  #   #  ",
+                           "  ###    #      #   #  #####  #####    #       ####   #  #####  #   #   ",
+                           " #      #      #   #  #      #        #       #   #  #  # #    #   #    ",
+                           "#      #####  #####  #      #        #       ####   #  #   #  ####      "};
 
+        String[] movingBanner = new String[5];
+        System.arraycopy(banner, 0, movingBanner, 0, banner.length);
+
+        for(int animation = 0; animation < 20; animation++) {
+            displayArea.setText("");
+            displayArea.append(newline);
+            for(int zeile = 0; zeile < banner.length; zeile++) {
+                movingBanner[zeile] = movingBanner[zeile].substring(1); //Ersten Character entfernen
+                displayArea.append(movingBanner[zeile] + newline);
+            }
+            displayArea.append("                                 By me!" + newline);
+            displayArea.append("Info: Press 'Space' to jump!" + newline);
+            displayArea.append("Press 's' to start!" + newline);
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //Am Ende einen unbeweglichen Banner anzeigen
+        displayArea.setText("");
+        displayArea.append(newline);
+        for (String zeile : banner) {
+            displayArea.append(zeile + newline);
+        }
+        displayArea.append("                                By me!" + newline);
         displayArea.append("Info: Press 'Space' to jump!" + newline);
         displayArea.append("Press 's' to start!" + newline);
     }

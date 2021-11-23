@@ -9,6 +9,7 @@ public class Game {
     private int spielerYAxis = 5;
     private static boolean SpaceIsPressed;
     public static boolean StartGame;
+    public static String SpaceStatistics = "";
     private int Score = 0;
 
 
@@ -55,12 +56,6 @@ public class Game {
         return spielfeld;
     }
 
-    // Spielfeld Ausgabe
-    public void PrintSpielfeld(String[][][] spielfeld) {
-        this.spielfeld = spielfeld;
-        KeyEventListener.displayGame(spielfeld,Score);
-    }
-
     // Erstellen eines Turmes
     public String[][][] CreateTower(String[][][] spielfeld) {
         this.spielfeld = spielfeld;
@@ -82,7 +77,7 @@ public class Game {
             }
         }
 
-        this.PrintSpielfeld(spielfeld);
+        KeyEventListener.displayGame(spielfeld,Score);
         return spielfeld;
     }
 
@@ -109,9 +104,27 @@ public class Game {
                 }
             }
         }
-        this.PrintSpielfeld(spielfeld);
+        //Abfrage von dem #-Turm über einem für den Score
+        if(isTowerAbove(spielfeld)) {
+            Score++;
+        }
+        KeyEventListener.displayGame(spielfeld,Score);
         return spielfeld;
     }
+
+    public boolean isTowerAbove(String[][][] spielfeld) {
+        int spielerHoehe = spielerYAxis;
+        while(spielerHoehe > 0) {
+            if(spielfeld[spielerHoehe][spielfeld[0].length/2][1].equals("#")) {
+                return true;
+            }
+            else {
+                spielerHoehe--;
+            }
+        }
+        return false;
+    }
+
 
     //KeyEventImport Boolean Value
     public static void setSpaceIsPressed(){
@@ -123,20 +136,17 @@ public class Game {
         this.spielfeld = spielfeld;
 
         if(SpaceIsPressed && spielerYAxis > 0){
-            this.PrintSpielfeld(spielfeld);
+            KeyEventListener.displayGame(spielfeld,Score);
             spielerYAxis--; //Aufwärtsbewegung des Spielers
+            SpaceStatistics += "x";
             SpaceIsPressed = false; //Zurücksetzen
         }
         else if(spielerYAxis < spielfeld.length-2) { //Abwärtsbewegung des Spielers
             spielerYAxis++; //Die spielerYAxis ist von oben nach unten; ++ bedeutet, um eins nach unten
+            SpaceStatistics += " ";
         }
 
         spielfeld = this.deleteOldPlayer(spielfeld);
-
-        //Abfrage von dem #-Turm über einem für den Score
-        if(isTowerAbove(spielfeld)) {
-            Score++;
-        }
 
         //Darstellung des aktuellen Spielers
         spielfeld[spielerYAxis][spielfeld[0].length/2][0] = "*";
@@ -147,7 +157,7 @@ public class Game {
             this.Death();
         }
 
-        this.PrintSpielfeld(spielfeld);
+        KeyEventListener.displayGame(spielfeld,Score);
         return spielfeld;
     }
 
@@ -169,25 +179,13 @@ public class Game {
         return spielfeld;
     }
 
-    public boolean isTowerAbove(String[][][] spielfeld) {
-        int spielerHoehe = spielerYAxis;
-        while(spielerHoehe > 0) {
-            if(spielfeld[spielerHoehe][spielfeld[0].length/2-1][1].equals("#")) {
-                return true;
-            }
-            else {
-                spielerHoehe--;
-            }
-        }
-        return false;
-    }
-
     public int getSpielerYAxis() {
         return spielerYAxis;
     }
 
     public void Death() {
         KeyEventListener.deathScreen(getSpielerYAxis(),Score,this.HighScore(Score));
+        System.out.println("Space Statistics: " + SpaceStatistics);
         System.exit(69420);
     }
 

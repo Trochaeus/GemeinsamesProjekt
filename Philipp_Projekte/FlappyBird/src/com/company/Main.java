@@ -8,11 +8,11 @@ public class Main {
 
     public static void main(String[] args) {
         Game GameMechanik = new Game();
-        KeyEventListener.KeyEventMain();
         Random random = new Random();
+        KeyEventListener.KeyEventMain();
 
         //Start Menü
-        GameMechanik.StartMenu();
+        GameMechanik.StartMenu(); //Vielleicht direkt das GUI-Startmenü aufrufen? (Erst wenn Farbe in der GUI ist)
         //Schwierigkeit
         KeyEventListener.Difficulty();
         while(!StartGame) {
@@ -30,7 +30,7 @@ public class Main {
 
         while(true) {
             Spielfeld = GameMechanik.CreateTower(Spielfeld);
-            int zufallszahl = random.nextInt(7);
+            int zufallszahl = random.nextInt(7); //zufällige Abstandsänderung der Türme (Horizontal)
             for(int j = 0; j<(10+zufallszahl);j++) {
                 Spielfeld = GameMechanik.MoveMap(Spielfeld);
                 Spielfeld = GameMechanik.Player(Spielfeld);
@@ -42,7 +42,7 @@ public class Main {
                         case 3 -> Thread.sleep(150);
                         case 4 -> Thread.sleep(100);
                         case 5 -> Thread.sleep(75);
-                        case 6 -> Thread.sleep(50);
+                        case 6 -> Thread.sleep(10);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -51,11 +51,11 @@ public class Main {
         }
     }
 }
-        /*
-        spielfeld[0].length 50 x
-        spielfeld.length 10 y
-        spielfeld[y][x]
-         */
+/*
+spielfeld[0].length 50 x
+spielfeld.length 10 y
+spielfeld[y][x]
+*/
 
 
 
