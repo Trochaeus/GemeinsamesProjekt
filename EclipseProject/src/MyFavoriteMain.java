@@ -11,6 +11,8 @@ public class MyFavoriteMain {
 		Auto meinAuto2 = new Auto("Mercedes", "C-Klasse", 180, true);
 		Auto meinAuto3 = new Auto("Audi", "A3", 190, false);
 
+		Auto auto5 = new Auto(true);
+
 		System.out.println(meinAuto1);
 		System.out.println(meinAuto2);
 		System.out.println(meinAuto3);
@@ -60,6 +62,7 @@ public class MyFavoriteMain {
 
 		// Lambda-Variante (kein Corona)
 		meinefahrzeugListe.forEach(fahrzeug -> gibFahrzeugEigenschaftenAus(fahrzeug));
+
 	}
 
 	public static void gibFahrzeugEigenschaftenAus(Fahrzeug fahrzeug) {
