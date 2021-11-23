@@ -1,2 +1,0 @@
-# GemeinsamesProjekt
-Privat
