@@ -1,23 +1,26 @@
-public class Fahrzeug {
+public abstract class Fahrzeug implements ZaehlbareInstanzen{
     //Instanzvariablen
     public String Hersteller;
     public String Typ;
     public int Hoechstgeschwindigkeit;
     int Fahrtdauer;
     static double DurchschnittsGeschwindigkeitFaktor = 0.5;
+    private static int anzahlInstanzen;
+
+
 
     public Fahrzeug() {
-
+        anzahlInstanzen++;
     }
     //Konstruktor
     public Fahrzeug(String Hersteller, String Typ, int Hoechstgeschwindigkeit) {
         this.Hersteller = Hersteller;
         this.Typ = Typ;
         this.Hoechstgeschwindigkeit = Hoechstgeschwindigkeit;
+        anzahlInstanzen++;
     }
 
     //Getter
-
     public String getHersteller() {
         return Hersteller;
     }
@@ -52,4 +55,17 @@ public class Fahrzeug {
         System.out.println("Die Entfernung beträgt " + Entfernung + "km");
     }
 
+
+    public static int getAnzahlInstanzen() {
+        return anzahlInstanzen;
+    }
+
+    public static void setAnzahlInstanzen(int anzahlInstanzen) {
+        Fahrzeug.anzahlInstanzen = anzahlInstanzen;
+    }
+
+    //Abstrakte Methode
+    public abstract int benzinVerbrauch(int verbrauchInLiter);
+
 }
+

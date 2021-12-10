@@ -5,19 +5,16 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class KeyEventListener extends JFrame implements KeyListener, ActionListener {
-    private static String[][][] spielfeld;
+    private static String[][][] gameBoard;
     static final String newline = System.getProperty("line.separator");
 
-    //wow static JPanel topPanel;
-    //static JTextPane displayArea_NEW;
     static JTextArea displayArea;
     static JTextField typingArea;
-    static boolean nochKeineSchwierigkeitGewaehlt = true;
 
     public KeyEventListener() {
         super("Floppy Bird");
     }
-    public static void KeyEventMain() {
+    public static void keyEventMain() {
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         } catch (Exception e) {
@@ -51,27 +48,11 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
     public void actionPerformed(ActionEvent e) {} //War für den Button
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        if(e.getKeyChar() == ' ') {
-            Game.setSpaceIsPressed();
-        }
-        else if(e.getKeyChar() == 's') {
-            typingArea.setText("");
-            Game.StartGame = true;
-        }
-        else if(nochKeineSchwierigkeitGewaehlt) {
-            if(e.getKeyChar() == '1' || e.getKeyChar() == '2' || e.getKeyChar() == '3' || e.getKeyChar() == '4' || e.getKeyChar() == '5' || e.getKeyChar() == '6') {
-                Main.Difficulty = (int) e.getKeyChar() - 48; //Rückgabe Wert 48 zu hoch (Position 0,1,2... in ASCII-Tabelle)
-                Main.StartGame = true;
-                nochKeineSchwierigkeitGewaehlt = false;
-            }
-        }
-        typingArea.setText("");
-    }
+    public void keyPressed(KeyEvent e) {}
 
-    public static void displayGame(String[][][] printSpielfeld, int Score) {
-        spielfeld = printSpielfeld;
-        switch(Main.Difficulty) {
+    public static void displayGame(String[][][] printgameBoard, int Score) {
+        gameBoard = printgameBoard;
+        switch(Main.difficulty) {
             case 1 -> typingArea.setText("Baby - Score: " + Score);
             case 2 -> typingArea.setText("Easy - Score: " + Score);
             case 3 -> typingArea.setText("Normal - Score: " + Score);
@@ -79,49 +60,15 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
             case 5 -> typingArea.setText("Godmode - Score: " + Score);
             case 6 -> typingArea.setText("Botmode - Score: " + Score);
         }
-        displayArea.setText("");
-        for (int yAxis = 0; yAxis < spielfeld.length; yAxis++) {
-            for (int xAxis = 0; xAxis < spielfeld[0].length; xAxis++) {
-                for (int Layer = 0; Layer < spielfeld[0][0].length; Layer++) {
-                    if (!spielfeld[yAxis][xAxis][Layer].equals("%")) {
-                        //Layer 0: Bird, Layer 1: Tower, Layer 2: Background, % bedeutet leer
-                        switch (spielfeld[yAxis][xAxis][Layer]) {
-                            case ".":
-                                if (spielfeld[yAxis][xAxis][0].equals("%") && spielfeld[yAxis][xAxis][1].equals("%")) {
-                                    displayArea.append(" "); //Wolken/Hintergrund NUR ANZEIGEN, wenn alles davor leer ist
-                                }
-                                break;
-                            case "~":
-                                if (spielfeld[yAxis][xAxis][0].equals("%") && spielfeld[yAxis][xAxis][1].equals("%")) {
-                                    displayArea.append(spielfeld[yAxis][xAxis][2]); //Wolken/Hintergrund NUR ANZEIGEN, wenn alles davor leer ist
-                                }
-                                break;
-                            case "#", "|":
-                                if (spielfeld[yAxis][xAxis][0].equals("%")) {
-                                    displayArea.append(spielfeld[yAxis][xAxis][1]); //Türme NUR ANZEIGEN, wenn alles davor leer ist
-                                }
-                                break;
-                            case "*", "/":
-                                displayArea.append(spielfeld[yAxis][xAxis][0]); //Spieler IMMER ANZEIGEN
-                                break;
-                            default:
-                                displayArea.append(spielfeld[yAxis][xAxis][Layer]); //Sollte eigentlich nicht vorkommen
-                                break;
-                        }
-                    }
-                }
-            }
-            displayArea.append(newline);
-        }
     }
 
-    public static void ShowMenu(){
+    public static void showMenu(){
         //Start Menü
         String[] banner = {"    #####  #      #####  #####  #####  #   #     ####   #  #####  ####  ",
-                           "   #      #      #   #  #   #  #   #   # #      #   #  #  #   #  #   #  ",
-                           "  ###    #      #   #  #####  #####    #       ####   #  #####  #   #   ",
-                           " #      #      #   #  #      #        #       #   #  #  # #    #   #    ",
-                           "#      #####  #####  #      #        #       ####   #  #   #  ####      "};
+                "   #      #      #   #  #   #  #   #   # #      #   #  #  #   #  #   #  ",
+                "  ###    #      #   #  #####  #####    #       ####   #  #####  #   #   ",
+                " #      #      #   #  #      #        #       #   #  #  # #    #   #    ",
+                "#      #####  #####  #      #        #       ####   #  #   #  ####      "};
 
         String[] movingBanner = new String[5];
         System.arraycopy(banner, 0, movingBanner, 0, banner.length);
@@ -133,33 +80,25 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
                 movingBanner[zeile] = movingBanner[zeile].substring(1); //Ersten Character entfernen
                 displayArea.append(movingBanner[zeile] + newline);
             }
-            displayArea.append("                                 By me!" + newline);
+            displayArea.append("                                              By me!" + newline);
             displayArea.append("Info: Press 'Space' to jump!" + newline);
             displayArea.append("Press 's' to start!" + newline);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            try {Thread.sleep(50);} catch (InterruptedException e) {e.printStackTrace();}
         }
 
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        try {Thread.sleep(200);} catch (InterruptedException e) {e.printStackTrace();}
         //Am Ende einen unbeweglichen Banner anzeigen
         displayArea.setText("");
         displayArea.append(newline);
         for (String zeile : banner) {
             displayArea.append(zeile + newline);
         }
-        displayArea.append("                                By me!" + newline);
+        displayArea.append("                                              By me!" + newline);
         displayArea.append("Info: Press 'Space' to jump!" + newline);
         displayArea.append("Press 's' to start!" + newline);
     }
 
-    public static void Difficulty(){
+    public static void difficulty(){
         displayArea.setText("");
         //Schwierigkeit
         displayArea.append("Choose: " + newline);
@@ -175,7 +114,7 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
 
     public static void deathScreen(int SpielerYAxis, int Score, int HighScore) {
         //Fenster leeren
-        displayArea.setText(" ");
+        displayArea.setText("");
         //Explosion auf der richtigen Höhe
         for(int i = 0; i < SpielerYAxis; i++) {
             displayArea.append(newline);
@@ -184,14 +123,10 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
         displayArea.append("                         " + (char)92 + "|/" + newline);
         displayArea.append("                        --0--" + newline);
         displayArea.append("                         /|" + (char)92 + newline);
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        try {Thread.sleep(300);} catch (InterruptedException e) {e.printStackTrace();}
 
         //Fenster leeren
-        displayArea.setText(" ");
+        displayArea.setText("");
         //Explosion auf der richtigen Höhe
         for(int i = 0; i < SpielerYAxis-1; i++) {
             displayArea.append(newline);
@@ -202,14 +137,10 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
         displayArea.append("                      . `` ,'. " + (char)34 + newline);
         displayArea.append("                       ~ (   ~ -" + newline);
         displayArea.append("                          `~ '  " + newline);
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        try {Thread.sleep(300);} catch (InterruptedException e) {e.printStackTrace();}
 
         //Fenster leeren
-        displayArea.setText(" ");
+        displayArea.setText("");
         //Explosion auf der richtigen Höhe
         for(int i = 0; i < SpielerYAxis-1; i++) {
             displayArea.append(newline);
@@ -219,16 +150,12 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
         displayArea.append("                     .'  " + (char)34 + "  '" + newline);
         displayArea.append("                    ,   ' , '  `" + newline);
         displayArea.append("                          `~ '  " + newline);
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        try {Thread.sleep(300);} catch (InterruptedException e) {e.printStackTrace();}
 
         //Fenster leeren
-        displayArea.setText(" ");
+        displayArea.setText("");
         //Explosion auf der richtigen Höhe
-        for(int i = 0; i < spielfeld.length/2-2; i++) {
+        for(int i = 0; i < gameBoard.length/2-2; i++) {
             displayArea.append(newline);
         }
         displayArea.append("                     You're Dead "+ newline);
@@ -236,7 +163,7 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
         displayArea.append(newline);
         displayArea.append(newline);
 
-        switch(Main.Difficulty) {
+        switch(Main.difficulty) {
             case 1 -> displayArea.append("Difficulty: Baby" +  newline);
             case 2 -> displayArea.append("Difficulty: Easy" +  newline);
             case 3 -> displayArea.append("Difficulty: Normal" +  newline);
@@ -248,11 +175,107 @@ public class KeyEventListener extends JFrame implements KeyListener, ActionListe
         displayArea.append("Your Score: "+ Score +  newline);
         displayArea.append("Your Highscore: "+ HighScore +  newline);
 
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        try {Thread.sleep(4000);} catch (InterruptedException e) {e.printStackTrace();}
 
     }
 }
+
+
+
+/*
+//ASCII-GUI Ausgabe
+        /*
+        displayArea.setText("");
+        for (int yAxis = 0; yAxis < gameBoard.length; yAxis++) {
+            for (int xAxis = 0; xAxis < gameBoard[0].length; xAxis++) {
+                for (int Layer = 0; Layer < gameBoard[0][0].length; Layer++) {
+                    if (!gameBoard[yAxis][xAxis][Layer].equals("%")) {
+                        //Layer 0: Bird, Layer 1: Tower, Layer 2: Background, % bedeutet leer
+                        switch (gameBoard[yAxis][xAxis][Layer]) {
+                            case ".":
+                                if (gameBoard[yAxis][xAxis][0].equals("%") && gameBoard[yAxis][xAxis][1].equals("%")) {
+                                    displayArea.append(" "); //Wolken/Hintergrund NUR ANZEIGEN, wenn alles davor leer ist
+                                }
+                                break;
+                            case "~":
+                                if (gameBoard[yAxis][xAxis][0].equals("%") && gameBoard[yAxis][xAxis][1].equals("%")) {
+                                    displayArea.append(gameBoard[yAxis][xAxis][2]); //Wolken/Hintergrund NUR ANZEIGEN, wenn alles davor leer ist
+                                }
+                                break;
+                            case "#", "|","+":
+                                if (gameBoard[yAxis][xAxis][0].equals("%")) {
+                                    if(gameBoard[yAxis][xAxis][1] == "+") {
+                                        displayArea.append("#"); //Diese Ausnahme besteht, da ich in der neuen GUI eine unterscheidung zwischen den oberen und den unteren Türmen brauche
+                                    }
+                                    else {
+                                        displayArea.append(gameBoard[yAxis][xAxis][1]); //Türme NUR ANZEIGEN, wenn alles davor leer ist
+                                    }
+                                }
+                                break;
+                            case "*", "/":
+                                displayArea.append(gameBoard[yAxis][xAxis][0]); //Spieler IMMER ANZEIGEN
+                                break;
+                            default:
+                                displayArea.append(gameBoard[yAxis][xAxis][Layer]); //Sollte eigentlich nicht vorkommen
+                                break;
+                        }
+                    }
+                }
+            }
+            displayArea.append(newline);
+        }
+
+        //Konsolen Ausgabe
+        //Farben
+        final String ANSI_RESET = "\u001B[0m";
+        final String ANSI_RED = "\u001B[31m";
+        final String ANSI_GREEN = "\u001B[32m";
+        final String ANSI_YELLOW = "\u001B[33m";
+        final String ANSI_BLUE = "\u001B[34m";
+        final String ANSI_PURPLE = "\u001B[35m";
+        final String ANSI_CYAN = "\u001B[36m";
+        final String ANSI_WHITE = "\u001B[37m";
+
+        for (int i = 0; i<20; i++) {
+            System.out.println(" ");
+        }
+
+        for (int yAxis = 0; yAxis < gameBoard.length; yAxis++) {
+            for (int xAxis = 0; xAxis < gameBoard[0].length; xAxis++) {
+                for (int Layer = 0; Layer < gameBoard[0][0].length; Layer++) {
+                    if (!gameBoard[yAxis][xAxis][Layer].equals("%")) {
+                        //Layer 0: Bird, Layer 1: Tower, Layer 2: Background, % bedeutet leer
+                        switch (gameBoard[yAxis][xAxis][Layer]) {
+                            case ".":
+                                if (gameBoard[yAxis][xAxis][0].equals("%") && gameBoard[yAxis][xAxis][1].equals("%")) {
+                                    System.out.print(ANSI_BLUE + gameBoard[yAxis][xAxis][2] + ANSI_RESET); //Wolken/Hintergrund NUR ANZEIGEN, wenn alles davor leer ist
+                                }
+                                break;
+                            case "~":
+                                if (gameBoard[yAxis][xAxis][0].equals("%") && gameBoard[yAxis][xAxis][1].equals("%")) {
+                                    System.out.print(gameBoard[yAxis][xAxis][2]); //Wolken/Hintergrund NUR ANZEIGEN, wenn alles davor leer ist
+                                }
+                                break;
+                            case "#", "|","+":
+                                if (gameBoard[yAxis][xAxis][0].equals("%")) {
+                                    if(gameBoard[yAxis][xAxis][1] == "+") {
+                                        System.out.print(ANSI_GREEN  + "#" + ANSI_RESET); //Diese Ausnahme besteht, da ich in der neuen GUI eine unterscheidung zwischen den oberen und den unteren Türmen brauche
+                                    }
+                                    else {
+                                        System.out.print(ANSI_GREEN  + gameBoard[yAxis][xAxis][1] + ANSI_RESET); //Türme NUR ANZEIGEN, wenn alles davor leer ist
+                                    }
+                                }
+                                break;
+                            case "*", "/":
+                                System.out.print(ANSI_YELLOW  + gameBoard[yAxis][xAxis][0] + ANSI_RESET); //Spieler IMMER ANZEIGEN
+                                break;
+                            default:
+                                System.out.print(ANSI_PURPLE  + gameBoard[yAxis][xAxis][Layer] + ANSI_RESET); //Sollte eigentlich nicht vorkommen
+                                break;
+                        }
+                    }
+                }
+            }
+            System.out.println(" ");
+        }
+*/

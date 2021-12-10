@@ -109,4 +109,26 @@ public class FarbMixGenerator {
 
         return ausgabe;
     }
+    public int[] GleichmäßigesWeiß(int red,int green,int blue) {
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+
+        filteredRed = red;
+        filteredGreen = green;
+        filteredBlue = blue;
+
+        if(red > 180) {
+            filteredRed = 255;
+        }
+        if(green > 180) {
+            filteredGreen = 255;
+        }
+        if(blue > 180) {
+            filteredBlue = 255;
+        }
+        int[] ausgabe = {filteredRed,filteredGreen,filteredBlue};
+
+        return ausgabe;
+    }
 }

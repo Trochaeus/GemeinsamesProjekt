@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 public class Main {
     public static void main(String[] args) {
         // TODO Auto-generated method stub
@@ -26,9 +28,9 @@ public class Main {
 
         for(int i = 0; i<fahrzeuge.length; i++) {
             System.out.println("Fahrzeug " + (i+1) + ":");
-            System.out.println("- Das Fahrzeug wurde von " + fahrzeuge[i].Hersteller + " hergestellt.");
-            System.out.println("- Der Typ: " + fahrzeuge[i].Typ);
-            System.out.println("- Der Höchstgeschwindigkeit beträgt " + fahrzeuge[i].Hoechstgeschwindigkeit + "km/h.");
+            System.out.println("- Das Fahrzeug wurde von " + fahrzeuge[i].getHersteller() + " hergestellt.");
+            System.out.println("- Der Typ: " + fahrzeuge[i].getTyp());
+            System.out.println("- Der Höchstgeschwindigkeit beträgt " + fahrzeuge[i].getHoechstgeschwindigkeit() + "km/h.");
             if (fahrzeuge[i] instanceof Auto) {
                 Auto auto = (Auto) fahrzeuge[i];
                 System.out.println("- Es ist ein Auto");
@@ -37,5 +39,42 @@ public class Main {
                 System.out.println("- Es ist ein Lastwagen");
             }
         }
+
+        HashMap<Auto, Double> myCarHashMap = new HashMap<>();
+        myCarHashMap.put((Auto)fahrzeuge[0],124516.5);
+        myCarHashMap.put((Auto)fahrzeuge[1],1232616.5);
+        System.out.println(myCarHashMap.get(fahrzeuge[0]));
+        System.out.println(myCarHashMap.get(fahrzeuge[1]));
+        System.out.println("Anzahl Instanzen: " + Fahrzeug.getAnzahlInstanzen());
+
+        /*
+        for (int i = 0; i<10;i++) {
+            System.out.println(" ");
+        }
+
+        HashMap<String, String> myHashMap = new HashMap<>();
+        myHashMap.put("Begrüßung","Moin");
+        myHashMap.put("Verarbschiedung","Tschüss");
+        myHashMap.put("BestätigendeAntwort","Ja");
+        myHashMap.put("VerneinendeAntwort","Nein");
+        myHashMap.put("Mitleid","Das tut mir leid.");
+
+        //Gibt den Wert vom Key Begrüßung aus
+        System.out.println(" ");
+        System.out.println("Key: Begrüßung -  " + myHashMap.get("Begrüßung"));
+        //Gibt alle Keys aus
+        System.out.println(" ");
+        System.out.println("Alle Keys: " + myHashMap.keySet());
+        //Gibt alle Values aus
+        System.out.println(" ");
+        System.out.println("Alle Values: " + myHashMap.values());
+        //Gibt alle Values der jeweiligen Keys aus
+        System.out.println(" ");
+        for (String key: myHashMap.keySet()) {
+            System.out.println(key + ": " + myHashMap.get(key));
+        }
+        */
+
+
     }
 }

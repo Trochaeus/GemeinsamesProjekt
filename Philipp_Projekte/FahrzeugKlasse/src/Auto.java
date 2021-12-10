@@ -1,4 +1,4 @@
-public class Auto extends  Fahrzeug{
+public class Auto extends Fahrzeug{
     //Variablen
     boolean hatDachgepaecktraeger;
 
@@ -14,5 +14,17 @@ public class Auto extends  Fahrzeug{
 
     public void setHatDachgepaecktraeger(boolean hatDachgepaecktraeger) {
         this.hatDachgepaecktraeger = hatDachgepaecktraeger;
+    }
+
+
+
+    @Override
+    public int gibAnzahlInstanzen() {
+        return 0;
+    }
+
+    //@Override
+    public int benzinVerbrauch(int verbrauchInLiter) {
+        return 0;
     }
 }

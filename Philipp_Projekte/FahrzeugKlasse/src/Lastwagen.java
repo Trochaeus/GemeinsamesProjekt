@@ -17,4 +17,14 @@ public class Lastwagen extends Fahrzeug{
         Frachtvolumen = frachtvolumen;
     }
 
+
+    @Override
+    public int gibAnzahlInstanzen() {
+        return 0;
+    }
+
+    @Override
+    public int benzinVerbrauch(int verbrauchInLiter) {
+        return 0;
+    }
 }
